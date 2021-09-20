@@ -33,7 +33,7 @@ services:
     environment:
     # Define variaveis de ambiente
       - POSTGRES_PASSWORD=docker
-      - POSTGRES_DB=apivendas
+      - POSTGRES_DB=apivendas_db
 
 
   pgadmin:
