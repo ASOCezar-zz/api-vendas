@@ -5,31 +5,18 @@ import { ProductsRepository } from '../typeorm/repositories/ProductsRepository';
 
 type IRequest = {
   id: string;
-  name: string;
 };
 
 class QueryProductService {
-  public async execute({ id, name }: IRequest): Promise<Product | undefined> {
+  public async execute({ id }: IRequest): Promise<Product> {
     const productsRepository = getCustomRepository(ProductsRepository);
 
-    if (id) {
-      const products = await productsRepository.findOne(id);
+    const products = await productsRepository.findOne(id);
 
-      if (!products) {
-        throw new AppError('This product does not exist.');
-      }
-      return products;
+    if (!products) {
+      throw new AppError('This product does not exist.');
     }
-
-    if (name) {
-      const products = await productsRepository.findByName(name);
-
-      if (!products) {
-        throw new AppError('This product does not exist.');
-      }
-
-      return products;
-    }
+    return products;
   }
 }
 

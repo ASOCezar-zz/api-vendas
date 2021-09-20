@@ -5,7 +5,7 @@ import { ProductsRepository } from '../typeorm/repositories/ProductsRepository';
 class ListProductService {
   public async execute(): Promise<Product[]> {
     const productsRepository = getCustomRepository(ProductsRepository);
-    const products = productsRepository.find();
+    const products = await productsRepository.find();
 
     return products;
   }
