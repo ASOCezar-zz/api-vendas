@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import CreateUserService from '../services/CreateUserService';
 import ListUsersService from '../services/ListUsersService';
-import QueryUserService from '../services/QueryUserService';
+import QueryUserByEmailService from '../services/QueryUserByEmailService';
+import QueryUserByIdService from '../services/QueryUserByIdService';
+import QueryUserByNameService from '../services/QueryUserByNameService';
 
 export default class UsersController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -22,12 +24,41 @@ export default class UsersController {
     return response.json(user);
   }
 
-  public async query(request: Request, response: Response): Promise<Response> {
-    const { name, email, id } = request.body;
+  public async queryById(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { id } = request.params;
 
-    const queryUser = new QueryUserService();
+    const queryUser = new QueryUserByIdService();
 
-    const user = await queryUser.execute({ name, email, id });
+    const user = await queryUser.execute({ id });
+
+    return response.json(user);
+  }
+
+  public async queryByName(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { name } = request.body;
+
+    const queryUser = new QueryUserByNameService();
+
+    const user = await queryUser.execute({ name });
+
+    return response.json(user);
+  }
+
+  public async queryByEmail(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { email } = request.body;
+
+    const queryUser = new QueryUserByEmailService();
+
+    const user = await queryUser.execute({ email });
 
     return response.json(user);
   }
