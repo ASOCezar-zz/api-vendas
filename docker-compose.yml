@@ -1,0 +1,49 @@
+version: "3"
+
+services:
+  app:
+    build: .
+    # Builda o servico a partir do Dockerfile referido
+    entrypoint: .docker/entrypoint.sh
+    # Adiciona alguns comandos antes de buildar o servico
+    container_name: apivendas-app
+    ports:
+      - "3333:3333"
+      # porta do sistema:porta no container
+    volumes:
+      - .:/home/node/app
+      # Mapeia as informacoes do container para a pasta referida
+    depends_on:
+    # O sistema espera que esses servicos listados sejam completos antes de inciar o app
+      - db
+      # - redis
+
+  db:
+    build: .docker/postgres
+    container_name: apivendas-db
+    restart: always
+    # Quando ocorrer qualquer problema que derrube o servico esse comando faz com que ele suba novamente automaticamente
+    tty: true
+    # Permite que se interaja dentro do sistema quando necessario
+    ports:
+      - "5432:5432"
+    volumes:
+      - .docker/dbdata:/var/lib/postgresql/data
+      # Esse e o caminho padrao para instalacao postgres linux
+    environment:
+    # Define variaveis de ambiente
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=apivendas
+
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: apivendas-pgadmin
+    tty: true
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "8000:80"
+    depends_on:
+      - db
