@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import routes from './routes';
 import AppError from '@shared/errors/AppError';
+import '@shared/typeorm';
 
 const app = express();
 
@@ -27,7 +28,7 @@ app.use(
   },
 );
 
-const PORT = 3333;
+const PORT = 3000;
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}! 🎉`);
