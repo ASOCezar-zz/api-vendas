@@ -10,7 +10,7 @@ export default class UserAvatarController {
       throw new AppError('Invalid avatar file');
     }
 
-    const user = updateAvatar.execute({
+    const user = await updateAvatar.execute({
       user_id: request.user.id,
       avatarFilename: request.file.filename,
     });
