@@ -1,5 +1,6 @@
 import EtherealMail from '@config/mail/EtherealMail';
 import AppError from '@shared/errors/AppError';
+import path from 'path';
 import { getCustomRepository } from 'typeorm';
 import UsersRepository from '../typeorm/repositories/UsersRepository';
 import UserTokenRepository from '../typeorm/repositories/UserTokenRepository';
@@ -21,6 +22,13 @@ export default class SendForgotPasswordEmailService {
 
     const { token } = await userTokenRepository.generate(user.id);
 
+    const forgotPasswordEmail = path.resolve(
+      __dirname,
+      '..',
+      'views',
+      'forgot_password_email.hbs',
+    );
+
     await EtherealMail.sendMail({
       to: {
         name: user.name,
@@ -28,10 +36,10 @@ export default class SendForgotPasswordEmailService {
       },
       subject: '[API Vendas] Change your password ',
       templateData: {
-        template: `Hello {{name}}! This is the token for your password change: {{token}}, this expires in 2 hours, be quick`,
+        file: forgotPasswordEmail,
         variables: {
           name: user.name,
-          token,
+          link: `https://localhost:3000/reset_password?token=${token}`,
         },
       },
     });
