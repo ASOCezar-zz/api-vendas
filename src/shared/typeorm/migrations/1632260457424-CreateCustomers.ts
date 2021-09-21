@@ -22,6 +22,16 @@ export class CreateCustomers1632260457424 implements MigrationInterface {
             type: 'varchar',
             isUnique: true,
           },
+          {
+            name: 'created_at',
+            type: 'timestamp with time zone',
+            default: 'now()',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp with time zone',
+            default: 'now()',
+          },
         ],
       }),
     );
