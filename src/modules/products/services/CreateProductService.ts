@@ -3,14 +3,18 @@ import { getCustomRepository } from 'typeorm';
 import Product from '../typeorm/entities/Product';
 import { ProductsRepository } from '../typeorm/repositories/ProductsRepository';
 
-type IRequest = {
+type RequestType = {
   name: string;
   price: number;
   quantity: number;
 };
 
 class CreateProductService {
-  public async execute({ name, price, quantity }: IRequest): Promise<Product> {
+  public async execute({
+    name,
+    price,
+    quantity,
+  }: RequestType): Promise<Product> {
     const productsRepository = getCustomRepository(ProductsRepository);
 
     const sameNameProduct = await productsRepository.findByName(name);

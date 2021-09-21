@@ -3,12 +3,12 @@ import { getCustomRepository } from 'typeorm';
 import User from '../typeorm/entities/User';
 import UsersRepository from '../typeorm/repositories/UsersRepository';
 
-type IRequest = {
+type RequestType = {
   id: string;
 };
 
 export default class QueryUserByIdService {
-  public async execute({ id }: IRequest): Promise<User> {
+  public async execute({ id }: RequestType): Promise<User> {
     const usersRepository = getCustomRepository(UsersRepository);
 
     const userExists = await usersRepository.findById(id);

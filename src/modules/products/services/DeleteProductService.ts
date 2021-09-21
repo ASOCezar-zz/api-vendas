@@ -2,12 +2,12 @@ import AppError from '@shared/errors/AppError';
 import { getCustomRepository } from 'typeorm';
 import { ProductsRepository } from '../typeorm/repositories/ProductsRepository';
 
-type IRequest = {
+type RequestType = {
   id: string;
 };
 
 class DeleteProductService {
-  public async execute({ id }: IRequest): Promise<void> {
+  public async execute({ id }: RequestType): Promise<void> {
     const productsRepository = getCustomRepository(ProductsRepository);
     const product = await productsRepository.findOne(id);
 
