@@ -22,8 +22,16 @@ export default class SendForgotPasswordEmailService {
     const token = await userTokenRepository.generate(user.id);
 
     await EtherealMail.sendMail({
-      to: email,
-      body: `Click on the link below to redefine your password ${token?.token}`,
+      to: {
+        name: user.name,
+        email: email,
+      },
+      templateData: {
+        template: `<p>Click on the link below to redefine your password ${token?.token}<p>`,
+        variables: {
+          name: user.name,
+        },
+      },
     });
   }
 }
