@@ -5,7 +5,7 @@ import sessionsRouter from '@modules/users/routes/sessions.routes';
 
 const routes = Router();
 
-routes.use('sessions', sessionsRouter);
+routes.use('/sessions', sessionsRouter);
 routes.use('/users', usersRouter);
 routes.use('/products', productsRouter);
 
