@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import ResetUserPasswordService from '../services/ResetUserPasswordService';
 
 export default class ResetPasswordController {
