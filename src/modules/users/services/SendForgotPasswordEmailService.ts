@@ -19,17 +19,19 @@ export default class SendForgotPasswordEmailService {
       throw new AppError('This email is not valid');
     }
 
-    const token = await userTokenRepository.generate(user.id);
+    const { token } = await userTokenRepository.generate(user.id);
 
     await EtherealMail.sendMail({
       to: {
         name: user.name,
         email: email,
       },
+      subject: '[API Vendas] Change your password ',
       templateData: {
-        template: `<p>Click on the link below to redefine your password ${token?.token}<p>`,
+        template: `Hello {{name}}! This is the token for your password change: {{token}}, this expires in 2 hours, be quick`,
         variables: {
           name: user.name,
+          token,
         },
       },
     });
