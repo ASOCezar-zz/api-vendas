@@ -1,6 +1,6 @@
 import AppError from '@shared/errors/AppError';
 import { NextFunction, Request, Response } from 'express';
-import { verify } from 'jsonwebtoken';
+import { JwtPayload, verify } from 'jsonwebtoken';
 import authConfig from '@config/auth';
 
 export default function isAuthenticated(
@@ -17,7 +17,17 @@ export default function isAuthenticated(
   const [, token] = authHeader.split(' ');
 
   try {
-    verify(token, authConfig.jwt.secret);
+    const decodedToken = verify(token, authConfig.jwt.secret);
+
+    const { sub } = decodedToken as JwtPayload;
+
+    if (sub === undefined) {
+      throw new AppError('User Id invalid or missing');
+    }
+
+    request.user = {
+      id: sub,
+    };
 
     return next();
   } catch {
