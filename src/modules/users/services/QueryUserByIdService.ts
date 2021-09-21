@@ -13,10 +13,10 @@ export default class QueryUserByIdService {
 
     const userExists = await usersRepository.findById(id);
 
-    if (userExists) {
-      return userExists;
-    } else {
+    if (!userExists) {
       throw new AppError('We did not found an user with this id');
     }
+
+    return userExists;
   }
 }

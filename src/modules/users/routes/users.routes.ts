@@ -17,26 +17,6 @@ usersRouter.get(
   usersController.queryById,
 );
 
-usersRouter.get(
-  '?name=:name',
-  celebrate({
-    [Segments.PARAMS]: {
-      name: Joi.string().required(),
-    },
-  }),
-  usersController.queryByName,
-);
-
-usersRouter.get(
-  '?email=:email',
-  celebrate({
-    [Segments.PARAMS]: {
-      email: Joi.string().required(),
-    },
-  }),
-  usersController.queryByEmail,
-);
-
 usersRouter.post(
   '/',
   celebrate({
@@ -48,3 +28,5 @@ usersRouter.post(
   }),
   usersController.create,
 );
+
+export default usersRouter;

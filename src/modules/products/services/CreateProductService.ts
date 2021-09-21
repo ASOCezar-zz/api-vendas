@@ -12,7 +12,9 @@ type IRequest = {
 class CreateProductService {
   public async execute({ name, price, quantity }: IRequest): Promise<Product> {
     const productsRepository = getCustomRepository(ProductsRepository);
+
     const sameNameProduct = await productsRepository.findByName(name);
+
     if (sameNameProduct) {
       throw new AppError(
         'This product or a product with same name already exists in our database',

@@ -1,9 +1,8 @@
+import AppError from '@shared/errors/AppError';
 import { Request, Response } from 'express';
 import CreateUserService from '../services/CreateUserService';
 import ListUsersService from '../services/ListUsersService';
-import QueryUserByEmailService from '../services/QueryUserByEmailService';
 import QueryUserByIdService from '../services/QueryUserByIdService';
-import QueryUserByNameService from '../services/QueryUserByNameService';
 
 export default class UsersController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -32,33 +31,11 @@ export default class UsersController {
 
     const queryUser = new QueryUserByIdService();
 
+    if (typeof id !== 'string') {
+      throw new AppError(' Id not found ');
+    }
+
     const user = await queryUser.execute({ id });
-
-    return response.json(user);
-  }
-
-  public async queryByName(
-    request: Request,
-    response: Response,
-  ): Promise<Response> {
-    const { name } = request.body;
-
-    const queryUser = new QueryUserByNameService();
-
-    const user = await queryUser.execute({ name });
-
-    return response.json(user);
-  }
-
-  public async queryByEmail(
-    request: Request,
-    response: Response,
-  ): Promise<Response> {
-    const { email } = request.body;
-
-    const queryUser = new QueryUserByEmailService();
-
-    const user = await queryUser.execute({ email });
 
     return response.json(user);
   }

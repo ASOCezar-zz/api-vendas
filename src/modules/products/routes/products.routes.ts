@@ -35,9 +35,9 @@ productsRouter.put(
   '/:id',
   celebrate({
     [Segments.BODY]: {
-      name: Joi.string().required(),
-      price: Joi.number().precision(2).required(),
-      quantity: Joi.number().required(),
+      name: Joi.string(),
+      price: Joi.number().precision(2),
+      quantity: Joi.number(),
     },
     [Segments.PARAMS]: {
       id: Joi.string().uuid().required(),

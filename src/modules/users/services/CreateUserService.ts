@@ -9,7 +9,7 @@ type IRequest = {
   password: string;
 };
 
-export default class CreateUserService {
+class CreateUserService {
   public async execute({ name, email, password }: IRequest): Promise<User> {
     const usersRepository = getCustomRepository(UsersRepository);
 
@@ -30,3 +30,5 @@ export default class CreateUserService {
     return user;
   }
 }
+
+export default CreateUserService;
