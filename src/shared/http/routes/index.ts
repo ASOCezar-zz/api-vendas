@@ -13,7 +13,7 @@ routes.use('/users', usersRouter);
 routes.use('/products', productsRouter);
 routes.use('/password', passwordRouter);
 routes.use('/profile', profileRouter);
-routes.use('/customer', customerRouter);
+routes.use('/customers', customerRouter);
 
 routes.get('/', (req, res) => {
   return res.json({ message: 'Hello Dev!' });
