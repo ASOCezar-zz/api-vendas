@@ -56,7 +56,7 @@ export default class CreateOrderService {
 
     if (quantityAvailable.length > 0) {
       throw new AppError(
-        `Quantity Error: We only have is ${quantityAvailable[0].quantity} of product: ${quantityAvailable[0].id} `,
+        `Quantity Error: We do not have this quantity of product: ${quantityAvailable[0].id} available on stock `,
       );
     }
 
