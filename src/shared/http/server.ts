@@ -38,6 +38,6 @@ app.use(
   },
 );
 
-app.listen(process.env.APP_WEB_PORT, () => {
-  console.log(`Server listening on port ${process.env.APP_WEB_PORT}! 🎉`);
+app.listen(3000, () => {
+  console.log(`Server listening on port 3333! 🎉`);
 });
