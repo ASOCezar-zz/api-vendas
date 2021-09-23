@@ -1,10 +1,13 @@
-import { EntityRepository, In, Repository } from 'typeorm';
-import Product from '../entities/Product';
+import { EntityRepository, Repository } from 'typeorm';
 
+<<<<<<< HEAD
 interface IFindProducts {
   id: string;
   quantity: number;
 }
+=======
+import Product from '../entities/Product';
+>>>>>>> parent of 16ea7cf... Create Order Service
 
 @EntityRepository(Product)
 export default class ProductsRepository extends Repository<Product> {
@@ -12,13 +15,5 @@ export default class ProductsRepository extends Repository<Product> {
     return this.findOne({
       where: { name },
     });
-  }
-
-  public async findAllByIds(products: IFindProducts[]): Promise<Product[]> {
-    const productsIds = products.map((product) => product.id);
-
-    const productsExists = await this.find({ where: { id: In(productsIds) } });
-
-    return productsExists;
   }
 }
