@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import 'dotenv/config';
 import express, { NextFunction, Request, Response } from 'express';
 import 'express-async-errors';
 import cors from 'cors';
@@ -37,8 +38,6 @@ app.use(
   },
 );
 
-const PORT = 3000;
-
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}! 🎉`);
+app.listen(process.env.APP_WEB_PORT, () => {
+  console.log(`Server listening on port ${process.env.APP_WEB_PORT}! 🎉`);
 });
