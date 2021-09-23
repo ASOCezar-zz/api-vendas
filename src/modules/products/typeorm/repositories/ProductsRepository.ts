@@ -3,6 +3,7 @@ import Product from '../entities/Product';
 
 interface IFindProducts {
   id: string;
+  quantity: number;
 }
 
 @EntityRepository(Product)

@@ -1,6 +1,7 @@
 import CustomerRepository from '@modules/customers/typeorm/repositories/CustomersRepository';
 import ProductsRepository from '@modules/products/typeorm/repositories/ProductsRepository';
 import AppError from '@shared/errors/AppError';
+import { getCustomRepository } from 'typeorm';
 import Order from '../typeorm/entities/Order';
 import OrdersRepository from '../typeorm/repositories/OrdersRepository';
 
@@ -19,9 +20,9 @@ export default class CreateOrderService {
     customer_id,
     products,
   }: CreateOrderType): Promise<Order> {
-    const ordersRepository = new OrdersRepository();
-    const customerRepository = new CustomerRepository();
-    const productsRepository = new ProductsRepository();
+    const ordersRepository = getCustomRepository(OrdersRepository);
+    const customerRepository = getCustomRepository(CustomerRepository);
+    const productsRepository = getCustomRepository(ProductsRepository);
 
     const customer = await customerRepository.findById(customer_id);
 
@@ -73,19 +74,19 @@ export default class CreateOrderService {
       products: serializedProduct,
     });
 
+    await ordersRepository.save(order);
+
     const { order_products } = order;
 
     const updatedQuantity = order_products.map((product) => ({
-      id: product.id,
+      id: product.product_id,
       quantity:
         productsExists.filter((existingProduct) => {
-          existingProduct.id === product.id;
+          existingProduct.id === product.product_id;
         })[0].quantity - product.quantity,
     }));
 
     await productsRepository.save(updatedQuantity);
-
-    await ordersRepository.save(order);
 
     return order;
   }
