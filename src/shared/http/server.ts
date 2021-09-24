@@ -9,11 +9,14 @@ import AppError from '@shared/errors/AppError';
 import '@shared/typeorm';
 import uploadConfig from '@config/upload';
 import { pagination } from 'typeorm-pagination';
+import ratelimiter from './middlewares/rateLimiter';
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use(ratelimiter);
 
 app.use(pagination);
 
