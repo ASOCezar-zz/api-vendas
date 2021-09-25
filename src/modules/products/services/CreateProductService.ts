@@ -1,4 +1,4 @@
-import RedisCache from '@shared/cache/RedisCache';
+import redisCache from '@shared/cache/RedisCache';
 import AppError from '@shared/errors/AppError';
 import { getCustomRepository } from 'typeorm';
 import Product from '../typeorm/entities/Product';
@@ -19,8 +19,6 @@ class CreateProductService {
     const productsRepository = getCustomRepository(ProductsRepository);
 
     const sameNameProduct = await productsRepository.findByName(name);
-
-    const redisCache = new RedisCache();
 
     if (sameNameProduct) {
       throw new AppError(
