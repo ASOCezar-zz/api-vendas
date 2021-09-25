@@ -24,18 +24,19 @@ class CreateProductService {
       throw new AppError(
         'This product or a product with same name already exists in our database',
       );
-    } else {
-      const product = productsRepository.create();
-      product.name = name;
-      product.price = price;
-      product.quantity = quantity;
-
-      await redisCache.invalidate('api-vendas-PRODUCT_LIST');
-
-      await productsRepository.save(product);
-
-      return product;
     }
+
+    const product = productsRepository.create();
+
+    product.name = name;
+    product.price = price;
+    product.quantity = quantity;
+
+    await redisCache.invalidate('api-vendas-PRODUCT_LIST');
+
+    await productsRepository.save(product);
+
+    return product;
   }
 }
 

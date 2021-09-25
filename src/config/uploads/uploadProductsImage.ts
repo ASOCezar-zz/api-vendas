@@ -16,12 +16,20 @@ interface IUploadConfig {
   };
 }
 
-const uploadFolder = path.resolve(__dirname, '..', '..', 'uploads');
-const tmpFolder = path.resolve(__dirname, '..', '..', 'temp');
+const storageFolder = path.resolve(
+  __dirname,
+  '..',
+  '..',
+  '..',
+  'uploads',
+  'products',
+);
+
+const tmpFolder = path.resolve(__dirname, '..', '..', '..', 'temp');
 
 export default {
   driver: process.env.STORAGE_DRIVE,
-  directory: uploadFolder,
+  directory: storageFolder,
   tmpFolder,
   multer: {
     storage: multer.diskStorage({
@@ -37,7 +45,7 @@ export default {
   },
   config: {
     aws: {
-      bucket: 'apivendas-avatar',
+      bucket: 'apivendas-products',
     },
   },
 } as IUploadConfig;

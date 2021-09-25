@@ -1,4 +1,4 @@
-import uploadConfig from '@config/upload';
+import uploadConfig from '@config/uploads/uploadUserAvatar';
 import fs from 'fs';
 import path from 'path';
 

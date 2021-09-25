@@ -7,7 +7,8 @@ import { errors } from 'celebrate';
 import routes from './routes';
 import AppError from '@shared/errors/AppError';
 import '@shared/typeorm';
-import uploadConfig from '@config/upload';
+import uploadAvatarConfig from '@config/uploads/uploadUserAvatar';
+import uploadProductImageConfig from '@config/uploads/uploadUserAvatar';
 import { pagination } from 'typeorm-pagination';
 import ratelimiter from './middlewares/rateLimiter';
 
@@ -20,7 +21,8 @@ app.use(ratelimiter);
 
 app.use(pagination);
 
-app.use('/files', express.static(uploadConfig.directory));
+app.use('/files/avatar', express.static(uploadAvatarConfig.directory));
+app.use('/files/products', express.static(uploadProductImageConfig.directory));
 
 app.use(routes);
 app.use(errors());

@@ -12,6 +12,9 @@ export default class ProductsRepository extends Repository<Product> {
       where: { name },
     });
   }
+  public async findById(id: string): Promise<Product | undefined> {
+    return this.findOne(id);
+  }
   public async findAllByIds(products: IFindProducts[]): Promise<Product[]> {
     const productsIds = products.map((product) => product.id);
 

@@ -1,3 +1,4 @@
+import { classToClass } from 'class-transformer';
 import { Request, Response } from 'express';
 import CreateProductService from '../services/CreateProductService';
 import DeleteProductService from '../services/DeleteProductService';
@@ -19,16 +20,20 @@ export default class ProductsController {
     const queryProduct = new QueryProductService();
     const product = await queryProduct.execute({ id });
 
-    return response.json(product);
+    return response.json(classToClass(product));
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
     const { name, price, quantity } = request.body;
 
     const createProduct = new CreateProductService();
-    const product = await createProduct.execute({ name, price, quantity });
+    const product = await createProduct.execute({
+      name,
+      price,
+      quantity,
+    });
 
-    return response.json(product);
+    return response.json(classToClass(product));
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
@@ -38,7 +43,7 @@ export default class ProductsController {
     const updateProduct = new UpdateProductService();
     const product = await updateProduct.execute({ id, name, price, quantity });
 
-    return response.json(product);
+    return response.json(classToClass(product));
   }
 
   public async delete(request: Request, response: Response): Promise<Response> {
@@ -47,6 +52,6 @@ export default class ProductsController {
     const deleteProduct = new DeleteProductService();
     const result = await deleteProduct.execute({ id });
 
-    return response.json(result);
+    return response.json(classToClass(result));
   }
 }

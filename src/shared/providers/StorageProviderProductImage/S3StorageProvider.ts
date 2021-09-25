@@ -1,4 +1,4 @@
-import upload from '@config/upload';
+import upload from '@config/uploads/uploadProductsImage';
 import aws, { S3 } from 'aws-sdk';
 import fs from 'fs';
 import mime from 'mime';

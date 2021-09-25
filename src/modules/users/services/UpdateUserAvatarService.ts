@@ -2,9 +2,9 @@ import AppError from '@shared/errors/AppError';
 import { getCustomRepository } from 'typeorm';
 import User from '../typeorm/entities/User';
 import UsersRepository from '../typeorm/repositories/UsersRepository';
-import DiskStorageProvider from '@shared/providers/StorageProvider/DiskStorageProvider';
-import upload from '@config/upload';
-import S3StorageProvider from '@shared/providers/StorageProvider/S3StorageProvider';
+import DiskStorageProvider from '@shared/providers/StorageProviderAvatar/DiskStorageProvider';
+import upload from '@config/uploads/uploadUserAvatar';
+import S3StorageProvider from '@shared/providers/StorageProviderAvatar/S3StorageProvider';
 
 type UpdateUserAvatarType = {
   user_id: string;

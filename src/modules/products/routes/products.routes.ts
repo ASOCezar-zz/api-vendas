@@ -4,8 +4,16 @@ import ProductsController from '../controllers/ProductsController';
 
 import { Joi, celebrate, Segments } from 'celebrate';
 
+import uploadConfig from '@config/uploads/uploadProductsImage';
+import multer from 'multer';
+import ProductsImageController from '../controllers/ProductsImageController';
+
 const productsRouter = Router();
+
 const productsController = new ProductsController();
+const productsImageController = new ProductsImageController();
+
+const upload = multer(uploadConfig.multer);
 
 productsRouter.get('/', productsController.index);
 
@@ -29,6 +37,17 @@ productsRouter.post(
     },
   }),
   productsController.create,
+);
+
+productsRouter.patch(
+  '/:id/image',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().uuid().required(),
+    },
+  }),
+  upload.single('image'),
+  productsImageController.update,
 );
 
 productsRouter.put(

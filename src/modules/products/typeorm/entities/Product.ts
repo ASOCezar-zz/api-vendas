@@ -1,4 +1,5 @@
 import OrdersProducts from '@modules/orders/typeorm/entities/OrdersProducts';
+import { Expose } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -26,6 +27,18 @@ class Product {
 
   @Column('int')
   quantity: number;
+
+  @Column()
+  image: string;
+
+  @Expose({ name: 'image_url' })
+  getProductUrl(): string | null {
+    if (!this.image) {
+      return null;
+    }
+
+    return `${process.env.APP_API_URL}/files/products/${this.image}`;
+  }
 
   @CreateDateColumn()
   created_at: Date;

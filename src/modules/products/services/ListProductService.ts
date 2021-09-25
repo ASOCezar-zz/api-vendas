@@ -1,4 +1,5 @@
 import redisCache from '@shared/cache/RedisCache';
+import { classToClass } from 'class-transformer';
 import { getCustomRepository } from 'typeorm';
 import Product from '../typeorm/entities/Product';
 import ProductsRepository from '../typeorm/repositories/ProductsRepository';
@@ -17,7 +18,7 @@ class ListProductService {
       await redisCache.save('api-vendas-PRODUCT_LIST', products);
     }
 
-    return products;
+    return classToClass(products);
   }
 }
 
