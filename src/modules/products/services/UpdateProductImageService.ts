@@ -1,25 +1,25 @@
 import AppError from '@shared/errors/AppError';
-import { getCustomRepository } from 'typeorm';
 import DiskStorageProvider from '@shared/providers/StorageProviderProductImage/DiskStorageProvider';
 import upload from '@config/uploads/uploadProductsImage';
 import S3StorageProvider from '@shared/providers/StorageProviderProductImage/S3StorageProvider';
-import ProductsRepository from '../typeorm/repositories/ProductsRepository';
-import Product from '../typeorm/entities/Product';
 import redisCache from '@shared/cache/RedisCache';
+import { inject, injectable } from 'tsyringe';
+import IProductsRepository from '../domain/repositories/IProductsRepository';
+import IProduct from '../domain/model/IProduct';
+import { IUpdateImage } from '../domain/model/IUpdateImage';
 
-type UpdateUserAvatarType = {
-  product_id: string;
-  imageFilename: string;
-};
-
+@injectable()
 export default class UpdateProductImageService {
+  constructor(
+    @inject('ProductsRepository')
+    private productsRepository: IProductsRepository,
+  ) {}
+
   public async execute({
     product_id,
     imageFilename,
-  }: UpdateUserAvatarType): Promise<Product> {
-    const productsRepository = getCustomRepository(ProductsRepository);
-
-    const product = await productsRepository.findById(product_id);
+  }: IUpdateImage): Promise<IProduct> {
+    const product = await this.productsRepository.findById(product_id);
 
     if (!product) {
       throw new AppError('Product Not Found', 404);
@@ -47,7 +47,7 @@ export default class UpdateProductImageService {
 
     await redisCache.invalidate('api-vendas-PRODUCT_LIST');
 
-    await productsRepository.save(product);
+    await this.productsRepository.save(product);
 
     return product;
   }

@@ -1,17 +1,18 @@
 import AppError from '@shared/errors/AppError';
-import { getCustomRepository } from 'typeorm';
-import Product from '../typeorm/entities/Product';
-import ProductsRepository from '../typeorm/repositories/ProductsRepository';
+import { inject, injectable } from 'tsyringe';
+import { IDeleteProduct } from '../domain/model/IDeleteProduct';
+import IProduct from '../domain/model/IProduct';
+import IProductsRepository from '../domain/repositories/IProductsRepository';
 
-type RequestType = {
-  id: string;
-};
-
+@injectable()
 class QueryProductService {
-  public async execute({ id }: RequestType): Promise<Product> {
-    const productsRepository = getCustomRepository(ProductsRepository);
+  constructor(
+    @inject('ProductsRepository')
+    private productsRepository: IProductsRepository,
+  ) {}
 
-    const products = await productsRepository.findOne(id);
+  public async execute({ id }: IDeleteProduct): Promise<IProduct> {
+    const products = await this.productsRepository.findById(id);
 
     if (!products) {
       throw new AppError('This product does not exist.');

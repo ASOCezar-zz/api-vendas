@@ -1,28 +1,31 @@
 import AppError from '@shared/errors/AppError';
 import path from 'path';
-import { getCustomRepository } from 'typeorm';
-import UsersRepository from '../typeorm/repositories/UsersRepository';
-import UserTokenRepository from '../typeorm/repositories/UserTokenRepository';
 import EtherealMail from '@config/mail/EtherealMail';
 import SESMail from '@config/mail/SESMail';
 import mailConfig from '@config/mail/mail';
+import { ISendForgotPassowordEmail } from '../domain/models/ISendForgotPassowordEmail';
+import { inject, injectable } from 'tsyringe';
+import { IUsersRepository } from '../domain/repositories/IUsersRepository';
+import ITokenRepository from '../domain/repositories/ITokenRepository';
 
-type SendForgotPasswordEmailType = {
-  email: string;
-};
-
+@injectable()
 export default class SendForgotPasswordEmailService {
-  public async execute({ email }: SendForgotPasswordEmailType): Promise<void> {
-    const usersRepository = getCustomRepository(UsersRepository);
-    const userTokenRepository = getCustomRepository(UserTokenRepository);
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
 
-    const user = await usersRepository.findByEmail(email);
+    @inject('TokenRepository')
+    private userTokenRepository: ITokenRepository,
+  ) {}
+
+  public async execute({ email }: ISendForgotPassowordEmail): Promise<void> {
+    const user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
       throw new AppError('This email is not valid');
     }
 
-    const { token } = await userTokenRepository.generate(user.id);
+    const { token } = await this.userTokenRepository.generate(user.id);
 
     const forgotPasswordEmail = path.resolve(
       __dirname,

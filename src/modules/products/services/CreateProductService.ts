@@ -1,24 +1,22 @@
-import redisCache from '@shared/cache/RedisCache';
 import AppError from '@shared/errors/AppError';
-import { getCustomRepository } from 'typeorm';
-import Product from '../typeorm/entities/Product';
-import ProductsRepository from '../typeorm/repositories/ProductsRepository';
+import { inject, injectable } from 'tsyringe';
+import { ICreateProduct } from '../domain/model/ICreateProduct';
+import IProduct from '../domain/model/IProduct';
+import IProductsRepository from '../domain/repositories/IProductsRepository';
 
-type RequestType = {
-  name: string;
-  price: number;
-  quantity: number;
-};
-
+@injectable()
 class CreateProductService {
+  constructor(
+    @inject('ProductsRepository')
+    private productsRepository: IProductsRepository,
+  ) {}
+
   public async execute({
     name,
     price,
     quantity,
-  }: RequestType): Promise<Product> {
-    const productsRepository = getCustomRepository(ProductsRepository);
-
-    const sameNameProduct = await productsRepository.findByName(name);
+  }: ICreateProduct): Promise<IProduct> {
+    const sameNameProduct = await this.productsRepository.findByName(name);
 
     if (sameNameProduct) {
       throw new AppError(
@@ -26,15 +24,11 @@ class CreateProductService {
       );
     }
 
-    const product = productsRepository.create();
-
-    product.name = name;
-    product.price = price;
-    product.quantity = quantity;
-
-    await redisCache.invalidate('api-vendas-PRODUCT_LIST');
-
-    await productsRepository.save(product);
+    const product = this.productsRepository.create({
+      name,
+      price,
+      quantity,
+    });
 
     return product;
   }

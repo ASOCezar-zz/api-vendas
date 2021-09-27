@@ -1,25 +1,18 @@
-import { getCustomRepository } from 'typeorm';
-import Customer from '../typeorm/entities/Customer';
-import CustomerRepository from '../typeorm/repositories/CustomersRepository';
+import { inject, injectable } from 'tsyringe';
 
-interface IPaginateCustomer {
-  from: number;
-  to: number;
-  per_page: number;
-  total: number;
-  current_page: number;
-  prev_page: number | null;
-  next_page: number | null;
-  last_page: number;
-  data: Customer[];
-}
+import { ICustomer } from '../domain/models/ICustomer';
+import { ICustomerRespository } from '../domain/repositories/ICustomerRespository';
 
+@injectable()
 export default class ListCustomerService {
-  public async execute(): Promise<IPaginateCustomer> {
-    const customerRepository = getCustomRepository(CustomerRepository);
+  constructor(
+    @inject('CustomerRepository')
+    private customerRepository: ICustomerRespository,
+  ) {}
 
-    const customer = await customerRepository.createQueryBuilder().paginate();
+  public async execute(): Promise<ICustomer[] | undefined> {
+    const customer = await this.customerRepository.findAll();
 
-    return customer as IPaginateCustomer;
+    return customer;
   }
 }

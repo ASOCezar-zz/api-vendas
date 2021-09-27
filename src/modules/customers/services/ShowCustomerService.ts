@@ -1,17 +1,18 @@
 import AppError from '@shared/errors/AppError';
-import { getCustomRepository } from 'typeorm';
-import Customer from '../typeorm/entities/Customer';
-import CustomerRepository from '../typeorm/repositories/CustomersRepository';
+import { inject, injectable } from 'tsyringe';
+import { IShowCustomer } from '../domain/models/IShowCustomer';
+import { ICustomerRespository } from '../domain/repositories/ICustomerRespository';
+import Customer from '../infra/typeorm/entities/Customer';
 
-type ShowCustomerType = {
-  id: string;
-};
-
+@injectable()
 export default class ShowCustomerService {
-  public async execute({ id }: ShowCustomerType): Promise<Customer> {
-    const customerRepository = getCustomRepository(CustomerRepository);
+  constructor(
+    @inject('CustomersRepository')
+    private customerRepository: ICustomerRespository,
+  ) {}
 
-    const customer = await customerRepository.findById(id);
+  public async execute({ id }: IShowCustomer): Promise<Customer> {
+    const customer = await this.customerRepository.findById(id);
 
     if (!customer) {
       throw new AppError('This User does not exist');

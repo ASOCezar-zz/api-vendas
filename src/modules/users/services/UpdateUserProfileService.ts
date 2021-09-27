@@ -1,34 +1,31 @@
 import AppError from '@shared/errors/AppError';
 import { compare, hash } from 'bcryptjs';
-import { getCustomRepository } from 'typeorm';
-import User from '../typeorm/entities/User';
-import UsersRepository from '../typeorm/repositories/UsersRepository';
+import { inject, injectable } from 'tsyringe';
+import { IUpdateProfile } from '../domain/models/IUpdateProfile';
+import { IUser } from '../domain/models/IUser';
+import { IUsersRepository } from '../domain/repositories/IUsersRepository';
 
-type UpdateUserProfileType = {
-  name: string;
-  password?: string;
-  old_password?: string;
-  email: string;
-  user_id: string;
-};
-
+@injectable()
 export default class UpdateUserProfileService {
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
+
   public async execute({
     name,
     email,
     password,
     old_password,
     user_id,
-  }: UpdateUserProfileType): Promise<User> {
-    const usersRepository = getCustomRepository(UsersRepository);
-
-    const user = await usersRepository.findById(user_id);
+  }: IUpdateProfile): Promise<IUser> {
+    const user = await this.usersRepository.findById(user_id);
 
     if (!user) {
       throw new AppError('This user does not exist');
     }
 
-    const emailExists = await usersRepository.findByEmail(email);
+    const emailExists = await this.usersRepository.findByEmail(email);
 
     if (emailExists && emailExists.id !== user_id) {
       throw new AppError('This email there is already in use');
@@ -51,7 +48,7 @@ export default class UpdateUserProfileService {
     user.name = name;
     user.email = email;
 
-    await usersRepository.save(user);
+    await this.usersRepository.save(user);
 
     return user;
   }
